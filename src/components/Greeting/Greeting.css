@@ -1,0 +1,120 @@
+.greeting {
+    max-width: 396px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.greeting__title {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    color: #FFFFFF;
+    margin: 0;
+    margin-bottom: 41px;
+}
+
+.greeting__input-text {
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #8B8B8B;
+    margin: 0;
+    margin-bottom: 4px;
+}
+
+.greeting__input {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #FFFFFF;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    border: none;
+    border-bottom: solid 1px #424242;
+    padding-bottom: 10px;
+    background-color: rgba(1, 1, 1, 0);
+}
+
+.greeting__input:focus {
+    outline: none;
+    border-bottom: solid 1px #4285F4;
+}
+
+.greeting__input_show_error {
+    color: #EE3465;
+}
+
+.greeting__container {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.greeting__container:last-of-type {
+    margin-bottom: 0;
+}
+
+.greeting__button {
+    width: 100%;
+    height: 45px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #FFFFFF;
+    background-color: #4285F4;
+    padding: 0;
+    border: none;
+    margin-top: 152px;
+    cursor: pointer;
+}
+
+.greeting__button:hover {
+    opacity: .6;
+    transition: .5s;
+}
+
+.greeting__text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #8B8B8B;
+    margin: 0;
+    text-align: center;
+    margin-top: 16px;
+}
+
+.greeting__link {
+    text-decoration: none;
+    color: #4285F4;
+    margin-left: 6px;
+}
+
+.greeting__link:hover {
+    opacity: .6;
+    transition: .5s;
+}
+
+@media screen and (max-width: 700px) {
+    .greeting {
+        max-width: 260px;
+    }
+
+    .greeting__title {
+        text-align: center;
+        margin-bottom: 80px;
+    }
+
+    .greeting__button {
+        margin-top: 240px;
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .greeting__text {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+}
