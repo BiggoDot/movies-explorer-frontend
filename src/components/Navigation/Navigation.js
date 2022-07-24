@@ -26,7 +26,15 @@ const Navigation = () => {
 
     useEffect(() => {
         setMenu(false);
-    }, [location])
+    }, [location]);
+
+    useEffect(() => {
+        if (menu) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'visible';
+        }
+    }, [menu]);
 
     return (<>
             <Routes>
@@ -50,7 +58,7 @@ const Navigation = () => {
                                 <NavLink
                                     className={({isActive}) => isActive ? 'navigation__web-link navigation__web-link_active' : 'navigation__web-link'}
                                     to='/profile'><p className='navigation__text'>Аккаунт</p><img
-                                    className='navigation__icon' src={profile}/></NavLink>
+                                    className='navigation__icon' alt='profile icon' src={profile}/></NavLink>
                             </div>
                             <button onClick={handleMenu} className={"navigation__burger-menu"}>
                                 <span
