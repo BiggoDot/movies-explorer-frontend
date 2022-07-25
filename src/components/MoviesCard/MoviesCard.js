@@ -20,13 +20,13 @@ const MoviesCard = ({card}) => {
                 <h2 className='movie-card__title'>{card.name}</h2>
                 <p className='movie-card__time'>{card.time}</p>
             </div>
-            <img className='movie-card__image' src={card.image}/>
+            <img className='movie-card__image' src={card.image} alt='movie poster'/>
             {location.pathname === '/saved-movies' &&
-                <button className='movie-card__button' onClick={handleSave}><img className='movie-card__button-img'
+                <button className='movie-card__button' onClick={handleSave}><img className='movie-card__button-img' alt='delete movie icon'
                                                                                  src={cross}/></button>}
             {location.pathname === '/movies' &&
                 <button className={isSaved ? 'movie-card__button movie-card__button_red' : 'movie-card__button'}
-                        onClick={handleSave}>{isSaved ? <img className='movie-card__button-img' src={done}/> :
+                        onClick={handleSave}>{isSaved ? <img className='movie-card__button-img' alt='saved movie icon' src={done}/> :
                     <p className='movie-card__button-text'>Сохранить</p>}</button>}
         </div>
     );

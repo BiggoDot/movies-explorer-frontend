@@ -83,7 +83,11 @@
 
 @media screen and (max-width: 1160px) {
     .about-me {
-        max-width: 668px;
+        max-width: 87%;
+    }
+
+    .about-me__text-container {
+        margin-right: 49px;
     }
 }
 
@@ -120,7 +124,7 @@
     }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
     .about-me {
         max-width: 292px;
     }

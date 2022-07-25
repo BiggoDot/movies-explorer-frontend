@@ -57,7 +57,7 @@
 
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
     .movie-list {
         margin-top: 50px;
     }
@@ -65,7 +65,6 @@
     .movie-list__container {
         grid-template-columns: repeat(auto-fit, 300px);
         row-gap: 17px;
-        column-gap: 50px;
     }
 
     .movie-list__button {

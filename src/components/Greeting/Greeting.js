@@ -11,11 +11,11 @@ const Greeting = ({title, text, writing, children, here, link}) => {
                 {children}
                 <label className='greeting__container'>
                     <p className='greeting__input-text'>E-mail</p>
-                    <input className='greeting__input' type='email' id='email'/>
+                    <input className='greeting__input' type='email' id='email' required/>
                 </label>
                 <label className='greeting__container'>
                     <p className='greeting__input-text'>Пароль</p>
-                    <input className='greeting__input greeting__input_show_error' type='password' id='password'/>
+                    <input className='greeting__input greeting__input_show_error' type='password' id='password' required/>
                     <Error/>
                 </label>
                 <button className='greeting__button' type='submit'>{writing}</button>

@@ -65,7 +65,7 @@
 
 @media screen and (max-width: 1160px) {
     .techs__container {
-        max-width: 668px;
+        max-width: 87%;
     }
 }
 
@@ -95,7 +95,11 @@
 
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
+    .techs {
+        background-color: #202020;
+    }
+
     .techs__container {
         max-width: 284px;
     }

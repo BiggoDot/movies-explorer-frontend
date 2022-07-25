@@ -14,7 +14,7 @@ const Navigation = () => {
 
     useEffect(() => {
         window.addEventListener('resize', handleWindowSize)
-        if (widthSize >= 600) {
+        if (widthSize >= 800) {
             setMenu(false);
         }
         return () => window.removeEventListener('resize', handleWindowSize)

@@ -13,7 +13,7 @@
     box-sizing: border-box;
 }
 
-.header-style_margin {
+.header-style_change_margin {
     margin-top: 100px;
 }
 
@@ -23,12 +23,16 @@
     }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
     .header-style {
         font-size: 18px;
         line-height: 22px;
         padding-bottom: 28px;
         margin-top: 70px;
+    }
+
+    .header-style_change_margin {
+        border-bottom-color: #000000;
     }
 }
 

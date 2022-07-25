@@ -34,10 +34,11 @@
 
     .promo__container {
         background-position: 50% 48%;
+        max-width: 92.3%;
     }
 }
 
-@media screen and  (max-width: 700px) {
+@media screen and  (max-width: 500px) {
     .promo__text {
         font-size: 31px;
         line-height: 39px;

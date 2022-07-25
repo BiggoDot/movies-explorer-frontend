@@ -41,7 +41,7 @@
     }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
     .no-page__title {
         font-size: 80px;
         line-height: 97px;
