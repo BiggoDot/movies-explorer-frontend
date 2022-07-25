@@ -1,0 +1,123 @@
+.techs {
+    background-color: #272727;
+    display: flex;
+    justify-content: center;
+}
+
+.techs__container {
+    max-width: 1140px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.techs__title {
+    margin: 0;
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 58px;
+    text-align: center;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+    margin-bottom: 26px;
+    margin-top: 90px;
+}
+
+.techs__text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+    margin-bottom: 100px;
+    max-width: 460px;
+}
+
+.techs__ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    gap: 10px;
+    margin-bottom: 100px;
+    flex-flow: wrap;
+}
+
+.techs__list {
+    list-style: none;
+    background-color: #303030;
+    border-radius: 10px;
+    width: 90px;
+}
+
+.techs__list-text {
+    padding-top: 21px;
+    padding-bottom: 22px;
+    margin: 0;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+}
+
+@media screen and (max-width: 1160px) {
+    .techs__container {
+        max-width: 87%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .techs__title {
+        margin-top: 75px;
+    }
+
+    .techs__text {
+        font-size: 12px;
+        line-height: 18px;
+        margin-bottom: 83px;
+    }
+
+    .techs__ul {
+        margin-bottom: 86px;
+    }
+
+    .techs__list {
+        width: 84px;
+    }
+
+    .techs__list-text {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    .techs {
+        background-color: #202020;
+    }
+
+    .techs__container {
+        max-width: 284px;
+    }
+
+    .techs__title {
+        font-size: 30px;
+        line-height: 36px;
+        margin-top: 60px;
+    }
+
+    .techs__text {
+        font-size: 11px;
+        line-height: 16px;
+        margin-bottom: 50px;
+    }
+
+    .techs__ul {
+        max-width: 178px;
+        margin-bottom: 70px;
+    }
+}
