@@ -14,6 +14,7 @@
     display: flex;
     border-bottom: solid 1px #424242;
     margin-bottom: 6px;
+    position: relative;
 }
 
 .profile__container:last-of-type {
@@ -73,6 +74,11 @@
     text-align: center;
     color: #EE3465;
     display: block;
+    background: rgba(1,1,1, 0);
+    border: rgba(1, 1, 1, 0);
+    padding: 0;
+    display: flex;
+    margin: 0 auto;
 }
 
 .profile__link:hover {

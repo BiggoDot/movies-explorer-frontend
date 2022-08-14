@@ -1,16 +1,33 @@
 import React from 'react';
 import Greeting from "../Greeting/Greeting";
+import {useFormWithValidation} from '../../hooks/hookForFrom';
+import Error from "../Error/Error";
+// ^[а-яА-ЯёЁa-zA-Z0-9]\s+$
+const Register = ({handleRegisterSubmit}) => {
+    const {handleChange, resetForm, values, errors, isValid} = useFormWithValidation();
 
-const Register = () => {
+    function handleSubmit(e) {
+        e.preventDefault();
+        handleRegisterSubmit(
+            values.password,
+            values.email,
+            values.name
+        )
+    }
+
     return (
         <Greeting title={'Добро пожаловать!'} here={'/signin'}
                   text={'Уже зарегистрированы?'} link={'Войти'}
-                  writing={'Зарегистрироваться'}>
+                  writing={'Зарегистрироваться'} handleSubmit={handleSubmit} 
+                  handleChange={handleChange} values={values} 
+                  resetForm={resetForm} isValid={isValid} errors={errors}>
             <label className='greeting__container'>
                 <p className='greeting__input-text'>Имя</p>
-                <input className='greeting__input' type='text' id='name' required/>
+                <input className={!errors.name ? 'greeting__input' : 'greeting__input greeting__input_show_error'} 
+                type='text' id='name' pattern={'^[а-яА-ЯёЁa-zA-Z\- \s]*$'} name='name' value={values.name || ''}
+                onChange={handleChange} required/>
+                {!isValid && <Error errors={errors.name}/>}
             </label>
-
         </Greeting>
     );
 };

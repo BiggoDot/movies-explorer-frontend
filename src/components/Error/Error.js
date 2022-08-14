@@ -1,9 +1,11 @@
 import React from 'react';
 import './Error.css';
 
-const Error = () => {
+const Error = ({errors}) => {
+
+    // console.log(errors.password)
     return (
-        <span className='error error_active'>Что-то пошло не так...</span>
+        <span className='error error_active'>{errors}</span>
     );
 };
 
