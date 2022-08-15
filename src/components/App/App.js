@@ -24,6 +24,7 @@ function App() {
     const [isFooter, setIsFooter] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState({});
     const [logError, setLogError] = React.useState(false);
+    const [logErrText, setLogErrText] = React.useState('');
     const [userInformation, setUserInformation] = React.useState({email: '', name: ''});
     let location = useLocation();
     // const [allMovies, setAllMovies] = React.useState([]);
@@ -31,6 +32,7 @@ function App() {
     // const [error, setError] =React.useState(false);
     // const [errorText, setErrorText] = React.useState('');
     const [savedMovie, setSavedMovie] = React.useState([]);
+    const [submitButtonDisabled, setSubmitButtonDisabled] = React.useState(false);
 
     useEffect(() => {
         if(localStorage.getItem('jwt')){
@@ -87,6 +89,7 @@ function App() {
         handleCheckToken();
         if (localStorage.getItem('jwt')) {
             // navigate('/');
+            // navigate('/movies');
             Promise.all([getProfile()])
                 .then(([userInformation]) => {
                     setCurrentUser(userInformation);
@@ -102,7 +105,16 @@ function App() {
         .then((res) => {
             setCurrentUser(res)
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+            if(err ===  409) {
+                setLogError(true);
+                setLogErrText('Юзер с таким имейлом уже существует');
+            }
+            if (err === 500) {
+                setLogError(true);
+                setLogErrText('Ошибка сервера');
+            }     
+        })
         }
 
         function deleteMovieCard(movie) {
@@ -131,29 +143,53 @@ function App() {
     // }, [localStorage.getItem('jwt')])
 
     function handleRegisterSubmit(password, email, name) {
+        setSubmitButtonDisabled(true);
         register(password, email, name)
             .then((res) => {
                 if (res) {
-                    navigate('/signin');
+                    navigate('/movies');
                     setLogError(false);
+                    handleLoginSubmit(email, password);
                 }
             })
-            .catch(() => setLogError(true))
+            .catch((err) => {
+                if (err === 401) {
+                    setLogError(true);
+                    setLogErrText('не верный email или пароль');
+                }
+                if(err ===  409) {
+                    setLogError(true);
+                    setLogErrText('Юзер с таким имейлом уже существует');
+                }
+                if (err === 500) {
+                    setLogError(true);
+                    setLogErrText('Ошибка сервера');
+                }          
+        })
+        .finally(() => setSubmitButtonDisabled(false))
     }
 
 
     function handleLoginSubmit(email, password) {
-        // console.log(email)
+        setSubmitButtonDisabled(true);
         authorize(email, password)
             .then((res) => {
                 if (res) {
                     localStorage.setItem('jwt', res.token);
-                    navigate('/movies');
+                    // navigate('/movies');
                 }
             })
-            .catch(() => {
-                setLogError(true);
+            .catch((err) => {
+                if (err === 401) {
+                    setLogError(true)
+                    setLogErrText('не верный email или пароль')
+                }
+                if (err === 500) {
+                    setLogError(true)
+                    setLogErrText('Ошибка сервера')
+                }
             })
+            .finally(() => setSubmitButtonDisabled(false))
     }
 
     function handleCheckToken() {
@@ -179,15 +215,15 @@ function App() {
         <div className='app'>
             {isHeader && <Header/>}
             <Routes>
-            <Route path='/signup' element={!localStorage.getItem('jwt') ? <Register handleRegisterSubmit={handleRegisterSubmit} logError={logError}/> : <Navigate replace to='/movies'/>}/>
-                <Route path='/signin' element={!localStorage.getItem('jwt') ? <Login handleLoginSubmit={handleLoginSubmit} logError={logError} setLogError={setLogError}/> : <Navigate replace to='/movies'/>}/>
+            <Route path='/signup' element={!localStorage.getItem('jwt') ? <Register handleRegisterSubmit={handleRegisterSubmit} submitButtonDisabled={submitButtonDisabled} logError={logError} logErrText={logErrText} setLogError={setLogError}/> : <Navigate replace to='/movies'/>}/>
+                <Route path='/signin' element={!localStorage.getItem('jwt') ? <Login handleLoginSubmit={handleLoginSubmit} submitButtonDisabled={submitButtonDisabled} logError={logError} setLogError={setLogError} logErrText={logErrText}/> : <Navigate replace to='/movies'/>}/>
                 <Route path='/' element={<Main/>}/>
             <Route element={<ProtectedRoute
                     ></ProtectedRoute>}>
                          <Route path='/movies' element={<Movies setSavedMovie={setSavedMovie} 
                         savedMovie={savedMovie} deleteMovieCard={deleteMovieCard}/>}/>
                          <Route path='/saved-movies' element={<SavedMovies savedMovie={savedMovie} deleteMovieCard={deleteMovieCard}/>}/>
-                         <Route path='/profile' element={<Profile handleLogout={handleLogout} handleEditProfile={handleEditProfile}/>}/>
+                         <Route path='/profile' element={<Profile handleLogout={handleLogout} setLogError={setLogError} logError={logError} handleEditProfile={handleEditProfile}/>}/>
                     </Route>
                 <Route path='*' element={<PageNotFound/>}/>
             </Routes>

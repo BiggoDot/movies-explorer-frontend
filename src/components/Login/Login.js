@@ -2,7 +2,7 @@ import React, {useEffect}from 'react';
 import Greeting from "../Greeting/Greeting";
 import {useFormWithValidation} from '../../hooks/hookForFrom';
 
-const Login = ({handleLoginSubmit, logError, setLogError}) => {
+const Login = ({handleLoginSubmit, logError, setLogError, logErrText, submitButtonDisabled}) => {
     const {handleChange, resetForm, values, errors, isValid} = useFormWithValidation();
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const Login = ({handleLoginSubmit, logError, setLogError}) => {
                   writing={'Войти'} handleSubmit={handleSubmit} 
                   handleChange={handleChange}
                   values={values} resetForm={resetForm} isValid={isValid} errors={errors} 
-                  logError={logError}></Greeting>
+                  logError={logError} logErrText={logErrText} submitButtonDisabled={submitButtonDisabled}></Greeting>
     );
 };
 

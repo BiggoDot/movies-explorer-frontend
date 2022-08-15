@@ -2,8 +2,9 @@ import React from 'react';
 import {Link, useLocation} from "react-router-dom";
 import './Greeting.css';
 import Error from "../Error/Error";
+import '../MoviesCardList/MoviesCardList.css'
 
-const Greeting = ({logError, title, text, writing, children, here, link, isValid, handleSubmit, handleChange, errors, values}) => {
+const Greeting = ({logError, logErrText, title, text, writing, children, here, link, isValid, handleSubmit, handleChange, errors, values, submitButtonDisabled}) => {
     const location = useLocation();
     // location.pathname === '/login'? : handleRegisterSubmit
     return (
@@ -24,9 +25,9 @@ const Greeting = ({logError, title, text, writing, children, here, link, isValid
                     <p className='greeting__input-text'>Пароль</p>
                     <input className={!errors.password ? 'greeting__input' : 'greeting__input greeting__input_show_error'} type='password' id='password' name='password' value={values.password || ''} onChange={handleChange} required/>
                     {!isValid && <Error errors={errors.password}/>}
-                    {logError ? <Error errors={'не верный email или пароль'}/> : <Error errors=''/>}
                 </label>
-                <button className={isValid ? 'greeting__button' : 'greeting__button greeting__button_disabled'} type='submit' disabled={isValid ? false : "disabled"}>{writing}</button>
+                {logError ? <p className='greeting__error'>{logErrText}</p> : <p className='greeting__error'></p>}
+                <button className={isValid ? 'greeting__button' : submitButtonDisabled ? 'greeting__button greeting__button_disabled' : 'greeting__button greeting__button_disabled'} type='submit' disabled={isValid ? false : submitButtonDisabled ? "disabled" : "disabled"}>{writing}</button>
             </form>
             <p className='greeting__text'>{text}<Link className='greeting__link' replace to={here}>{link}</Link></p>
         </main>

@@ -66,6 +66,10 @@
     transition: 0.5s;
 }
 
+.profile__button_disabled {
+    color: #424242;
+}
+
 .profile__link {
     text-decoration: none;
     font-weight: 500;

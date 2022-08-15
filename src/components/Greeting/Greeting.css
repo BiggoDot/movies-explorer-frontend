@@ -4,6 +4,10 @@
     margin: 0 auto;
 }
 
+.greeting__from {
+    position: relative;
+}
+
 .greeting__title {
     font-weight: 500;
     font-size: 24px;
@@ -110,6 +114,18 @@
     transition: .5s;
 }
 
+.greeting__error {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 400;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 0;
+    position: absolute;
+    top: 70%;
+    width: 100%;
+}
+
 @media screen and (max-width: 500px) {
     .greeting {
         max-width: 260px;
@@ -129,6 +145,11 @@
     .greeting__text {
         font-size: 12px;
         line-height: 15px;
+    }
+
+    .greeting__error {
+        font-size: 12px;
+        line-height: 14px;
     }
 
 }

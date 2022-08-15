@@ -13,3 +13,7 @@
 .error_active {
     visibility: visible;
 }
+
+.error_change_position {
+    top: 43px;
+}
