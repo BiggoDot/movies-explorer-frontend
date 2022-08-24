@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import {Link} from "react-router-dom";
 import '../Greeting/Greeting.css';
 import './Profile.css';
 import {useFormWithValidation} from '../../hooks/hookForFrom';
 import {CurrentUserContext} from "../../context/CurrentUserContext";
 import Error from '../Error/Error';
 
-const Profile = ({handleLogout, handleEditProfile, logError, setLogError}) => {
+const Profile = ({handleLogout, handleEditProfile, profileError, setProfileError, profileErrText, submitButtonDisabled}) => {
     const {handleChange, resetForm, setValues, values, errors, isValid} = useFormWithValidation();
     const currentUser = React.useContext(CurrentUserContext);
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-// console.log(isValid)
     React.useEffect(() => {
         setValues(currentUser);
     }, [currentUser]);
- 
+
     useEffect(() => {
         if(values.name === currentUser.name && values.email === currentUser.email){
-            setButtonDisabled(true)
+           return setButtonDisabled(true)
         }
         else {
+            setProfileError(false);
             setButtonDisabled(false);
         }
     }, [values])
@@ -49,7 +48,8 @@ const Profile = ({handleLogout, handleEditProfile, logError, setLogError}) => {
                     onChange={handleChange} pattern={'^([a-z]){1,}[a-z0-9]*([.+_-]){0,1}[0-9a-z]+(@){1}([0-9a-z]+)(\\.([a-z]){2,}){1}(\\.[a-z]{2,})?$'} required/>
                     {!isValid && <Error errors={errors.email}/>}
                 </label>
-                <button className={buttonDisabled ? 'profile__button profile__button_disabled' : isValid ? 'profile__button'  : 'profile__button profile__button_disabled'} type='submit' disabled={isValid ? false : buttonDisabled ? 'disabled' : 'disabled'}>Редактировать</button>
+                {profileError && <p className='profile__error'>{profileErrText}</p>}
+                <button className={buttonDisabled ? 'profile__button profile__button_disabled' : isValid ? 'profile__button'  : 'profile__button profile__button_disabled'} type='submit' disabled={buttonDisabled ? true : submitButtonDisabled ? true : isValid ? false : true}>Редактировать</button>
             </form>
             <button className='profile__link' onClick={handleLogout}>Выйти из аккаунта</button>
         </main>

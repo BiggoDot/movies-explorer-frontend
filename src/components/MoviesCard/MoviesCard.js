@@ -3,17 +3,12 @@ import {useLocation} from 'react-router-dom';
 import './MoviesCard.css';
 import done from '../../images/done.svg';
 import cross from '../../images/cross.svg';
-import {CurrentUserContext} from "../../context/CurrentUserContext";
 
-const MoviesCard = ({card, saveMovies, deleteMovieCard, cards, savedMovie}) => {
+const MoviesCard = ({card, saveMovies, deleteMovieCard, cards, savedMovie, submitButtonDisabled}) => {
     const location = useLocation();
-    const currentUser = React.useContext(CurrentUserContext)
-    const filteredMoviesInLocal = JSON.parse(localStorage.getItem('filteredMovies'))|| [];
     const isSaved = card.id ?  savedMovie.map((i)=>i.movieId).includes(card.id) 
     : location.pathname==='/saved-movies' ? true : '';
-    // const isSaved = savedMovie.map((i)=>i.movieId).includes(card.id) ? true : location.pathname==='/saved-movies' ? true : false;
-    // console.log(isSaved)
-    
+    // console.log(submitButtonDisabled)
 function handleDelete() {
     if(location.pathname === '/saved-movies'){
         deleteMovieCard(card)
@@ -22,9 +17,7 @@ function handleDelete() {
     deleteMovieCard(savedMovie.find((i) => i.movieId===card.id))
 }
 
-// console.log(savedMovie.find((i) => savedMovie.filter((i) => i.movieId===card.id)))
     function handleSave() {
-        // setIsSaved(!isSaved);
         saveMovies({country: card.country,
             director: card.director,
             duration: card.duration,
@@ -38,7 +31,6 @@ function handleDelete() {
             movieId: card.id,})
     }
     
-
     return (
         <div className='movie-card' key={card.id || card.movieId}>
             <div className='movie-card__text-container'>
@@ -47,11 +39,12 @@ function handleDelete() {
             </div>
             <a href={card.trailerLink} target='_blank'><img className='movie-card__image' src={location.pathname === '/saved-movies' ? `${card.image}` : `https://api.nomoreparties.co${card.image.url}`} alt='movie poster'/></a>
             {location.pathname === '/saved-movies' &&
-                <button className='movie-card__button' onClick={isSaved ? handleDelete : handleSave}><img className='movie-card__button-img' alt='delete movie icon'
-                                                                                 src={cross}/></button>}
+                <button className='movie-card__button' onClick={handleDelete} disabled={submitButtonDisabled ? true : false}>
+                    <img className='movie-card__button-img' alt='delete movie icon'src={cross}/>
+                    </button>}
             {location.pathname === '/movies' &&
                 <button className={isSaved ? 'movie-card__button movie-card__button_red' : 'movie-card__button'}
-                        onClick={isSaved ? handleDelete : handleSave}>{isSaved ? <img className='movie-card__button-img' alt='saved movie icon' src={done}/> :
+                        onClick={isSaved ? handleDelete : handleSave} disabled={submitButtonDisabled ? true : false}>{isSaved ? <img className='movie-card__button-img' alt='saved movie icon' src={done}/> :
                     <p className='movie-card__button-text'>Сохранить</p>}</button>}
         </div>
     );

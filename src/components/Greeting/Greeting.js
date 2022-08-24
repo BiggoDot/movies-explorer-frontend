@@ -27,7 +27,7 @@ const Greeting = ({logError, logErrText, title, text, writing, children, here, l
                     {!isValid && <Error errors={errors.password}/>}
                 </label>
                 {logError ? <p className='greeting__error'>{logErrText}</p> : <p className='greeting__error'></p>}
-                <button className={isValid ? 'greeting__button' : submitButtonDisabled ? 'greeting__button greeting__button_disabled' : 'greeting__button greeting__button_disabled'} type='submit' disabled={isValid ? false : submitButtonDisabled ? "disabled" : "disabled"}>{writing}</button>
+                <button className={submitButtonDisabled ? 'greeting__button greeting__button_disabled' : isValid ? 'greeting__button' : 'greeting__button greeting__button_disabled'} type='submit' disabled={submitButtonDisabled ? "disabled" : isValid ? false : "disabled"}>{writing}</button>
             </form>
             <p className='greeting__text'>{text}<Link className='greeting__link' replace to={here}>{link}</Link></p>
         </main>

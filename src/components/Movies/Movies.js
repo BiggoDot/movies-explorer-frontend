@@ -4,51 +4,26 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import './Movies.css';
 import { saveMovie } from '../../utils/MainApi'; 
 import { getMovies } from '../../utils/MoviesApi';
+import { movieFilter } from '../../utils/filterMovies';
 
-const Movies = ({setSavedMovie, savedMovie, deleteMovieCard}) => {
+const Movies = ({setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitButtonDisabled, setSubmitButtonDisabled}) => {
     const [movie, setMovie] = React.useState([]);
     const [film, setFilm] = React.useState(getSearchStoreValue());
     const [width, setWidth] = React.useState(window.innerWidth);
     const [visibleMoviesCount, setVisibleMoviesCount] = React.useState(getFirstRows(width));
     const moviesInLocal = JSON.parse(localStorage.getItem('allMovies'));
-    const filteredMoviesInLocal = JSON.parse(localStorage.getItem('filteredMovies'))|| [];
     const [checkShorts, setCheckShorts] = React.useState(JSON.parse(localStorage.getItem('checkBox')) || false);
-    const [allMovies, setAllMovies] = React.useState([]);
+    const [allMovies, setAllMovies] = React.useState(JSON.parse(localStorage.getItem('allMovies')) || []);
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] =React.useState(false);
     const [errorText, setErrorText] = React.useState('');
-    const [firstSearch, setFirstSearch] = React.useState(false);
-    // const [startSearch, setStartSearch] = React.useState(false);
-    // console.log(moviesInLocal)
 
     function showShortMovies() {
         setCheckShorts(!checkShorts)
-        movieFilter()
-        localStorage.setItem('filmSearch', film);
-
     }
-    //  useEffect(() => {
-    //     if(!moviesInLocal){
-    //         console.log('moviesInLocal')
-    //     getMovies()
-    //         .then((res) => {
-    //             setIsLoading(false);
-    //                 setAllMovies(res);
-    //                 localStorage.setItem('allMovies', JSON.stringify(res));
-    //                 movieFilter()
-    //         })
-    //         .catch(() => {
-    //             setError(true);
-    //             setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
-    //         })
-    //         .finally(() => {setIsLoading(false)
-    //             })
-    //         }
-    // }, [film])
-
-//    console.log(allMovies)
 
     function saveMovies(movie) {
+        setSubmitButtonDisabled(true)
         saveMovie(movie.country,
             movie.director,
             movie.duration,
@@ -63,7 +38,8 @@ const Movies = ({setSavedMovie, savedMovie, deleteMovieCard}) => {
         .then((res) => {
             setSavedMovie([res, ...savedMovie])
         })
-        .catch((err) => console.log(err))
+        .catch((err) => setToolTip(true))
+        .finally(() => setSubmitButtonDisabled(false))
     }
 
 
@@ -94,32 +70,14 @@ const Movies = ({setSavedMovie, savedMovie, deleteMovieCard}) => {
         return 2;
     }
 
-//    localStorage.setItem('shortFilteredMovies', filteredMoviesInLocal.filter((movieCard)=>{
-//     return movieCard.duration <= 40;
-//    }))
-function movieFilter() {
-    // console.log(1)
-     localStorage.setItem('filteredMovies', JSON.stringify(allMovies.filter((movieCard) => {
-       return movieCard.nameRU.toLowerCase().includes(film.toLowerCase()) && (checkShorts ? movieCard.duration <= 40 : movieCard.duration > 40)})));
-return JSON.parse(localStorage.getItem('filteredMovies'))
-}
-// console.log(allMovies)
-useEffect(() => {
-    movieFilter()
-    setMovie(filteredMoviesInLocal); 
-    // console.log(filteredMoviesInLocal)
-
-}, [firstSearch])
-
     useEffect(() => {
-        localStorage.setItem('checkBox', checkShorts)
-        // movieFilter()
+        setError(false)
+        const moviesToDisplay = movieFilter(allMovies, film, checkShorts)
+        localStorage.setItem('filteredMovies', JSON.stringify(moviesToDisplay))
+        localStorage.setItem('checkBox', checkShorts);
+        const filteredMoviesInLocal = JSON.parse(localStorage.getItem('filteredMovies')) || [];
+           
         setMovie(filteredMoviesInLocal); 
-        // console.log(2)
-    
-        // showShortMovies()
-    // console.log(filteredMoviesInLocal.length)
-
         if(filteredMoviesInLocal.length === 0 && film.length > 0) {
             setIsLoading(false);
             setErrorText('Ничего не найдено');
@@ -127,18 +85,6 @@ useEffect(() => {
         }    
        
     }, [allMovies, checkShorts])
-    
-
-    // useEffect(() => {
-        // localStorage.setItem('checkBox', checkShorts)
-        // movieFilter()
-        // setMovie(filteredMoviesInLocal)
-
-    // },[checkShorts])
-
-    
-//    console.log(checkSorts)
-
 
     function getSearchStoreValue () {
         const searchStoreValue = localStorage.getItem('filmSearch');
@@ -152,9 +98,6 @@ useEffect(() => {
         setFilm(e.target.value)
     }
     
-    
-    
-
     function handleFilmSearch (e) {
         e.preventDefault();
         setError(false);
@@ -171,30 +114,22 @@ useEffect(() => {
                 setIsLoading(false);
                     localStorage.setItem('allMovies', JSON.stringify(res));
                     setAllMovies(res);
-                    setFirstSearch(true)
-                    // movieFilter()
-                    // setMovie(filteredMoviesInLocal)
-                    // console.log(localStorage.getItem('allMovies'))
+                    localStorage.setItem('filmSearch', film);
             })
             .catch(() => {
                 setError(true);
                 setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
             })
             .finally(() => {setIsLoading(false)
-                // movieFilter()
-                // setAllMovies(JSON.parse(localStorage.getItem('allMovies')));
                 })
             }
         else{
-            setFirstSearch(false)
             setAllMovies(moviesInLocal);
-            movieFilter()
             setIsLoading(false);
             localStorage.setItem('filmSearch', film);
         }
     
     }
-    // localStorage.clear()
 
     function handleLoadMore () {
         return setVisibleMoviesCount((prevCount) => prevCount + getLoad(width))
@@ -206,7 +141,8 @@ useEffect(() => {
             film={film} showShortMovies={showShortMovies} checkShorts={checkShorts}/>
             <MoviesCardList cards={movie} isLoading={isLoading} error={error} 
             visibleMoviesCount={visibleMoviesCount} deleteMovieCard={deleteMovieCard} handleLoadMore={handleLoadMore}
-            errorText={errorText} saveMovies={saveMovies} savedMovie={savedMovie}/>
+            errorText={errorText} saveMovies={saveMovies} savedMovie={savedMovie}
+            submitButtonDisabled={submitButtonDisabled}/>
         </main>
     );
 };

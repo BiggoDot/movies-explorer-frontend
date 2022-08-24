@@ -12,11 +12,10 @@ import Register from "../Register/Register";
 import Login from "../Login/Login";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import Profile from "../Profile/Profile";
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import {getProfile, editProfile, deleteMovie, getSavedMovie} from "../../utils/MainApi";
 import {CurrentUserContext} from "../../context/CurrentUserContext";
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-
-import { getMovies } from '../../utils/MoviesApi';
 
 function App() {
     const navigate = useNavigate();
@@ -25,24 +24,13 @@ function App() {
     const [currentUser, setCurrentUser] = React.useState({});
     const [logError, setLogError] = React.useState(false);
     const [logErrText, setLogErrText] = React.useState('');
-    const [userInformation, setUserInformation] = React.useState({email: '', name: ''});
+    const [profileError, setProfileError] = React.useState(false);
+    const [profileErrText, setProfileErrText] = React.useState('');
     let location = useLocation();
-    // const [allMovies, setAllMovies] = React.useState([]);
-    // const [isLoading, setIsLoading] = React.useState(false);
-    // const [error, setError] =React.useState(false);
-    // const [errorText, setErrorText] = React.useState('');
     const [savedMovie, setSavedMovie] = React.useState([]);
     const [submitButtonDisabled, setSubmitButtonDisabled] = React.useState(false);
-
-    useEffect(() => {
-        if(localStorage.getItem('jwt')){
-        getSavedMovie()
-        .then((res) => {
-            setSavedMovie(res.filter((i) => i.owner._id === currentUser._id))
-        })
-        .catch((err) => console.log(err))
-    }
-    }, [currentUser])
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [toolTip, setToolTip] = React.useState(false);
     
     // PATHS
     useEffect(() => {
@@ -62,93 +50,71 @@ function App() {
         }
     }, [location, isHeader]);
 
-    // LOGIIN
-    // React.useEffect(() => {
-    //     handleCheckToken();
-    //     if (localStorage.getItem('jwt')) {
-    //         // navigate('/');
-    //         console.log(1)
-    //         Promise.all([getProfile(), getMovies()])
-    //             .then(([userInformation, movieInformation]) => {
-    //                 setCurrentUser(userInformation);
-    //                 setIsLoading(false);
-    //                 setAllMovies(movieInformation);
-    //                 localStorage.setItem('allMovies', JSON.stringify(movieInformation));
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err)
-    //                 setError(true);
-    //                 setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
-    //             })
-    //             .finally(() => {setIsLoading(false)
-    //             })
-    //     }
-    // }, [localStorage.getItem('jwt')])
-
+    // LOGIIN EFFECT
     React.useEffect(() => {
         handleCheckToken();
         if (localStorage.getItem('jwt')) {
-            // navigate('/');
-            // navigate('/movies');
             Promise.all([getProfile()])
                 .then(([userInformation]) => {
                     setCurrentUser(userInformation);
                 })
                 .catch((err) => {
-                    console.log(err)
+                    setToolTip(true)
                 })
         }
     }, [localStorage.getItem('jwt')])
 
+    // GETTING SAVED MOVIES EFFECT
+    useEffect(() => {
+        setIsLoading(true)
+        if(localStorage.getItem('jwt')){
+        getSavedMovie()
+        .then((res) => {
+            setSavedMovie(res.filter((i) => i.owner._id === currentUser._id))
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {setIsLoading(false)})
+    }
+    }, [currentUser])
+
     function handleEditProfile (name, email) {
+        setSubmitButtonDisabled(true)
         editProfile(name, email)
         .then((res) => {
             setCurrentUser(res)
+            setProfileError(true);
+            setProfileErrText('Ваши данные успешно изменены');
         })
         .catch((err) => {
             if(err ===  409) {
-                setLogError(true);
-                setLogErrText('Юзер с таким имейлом уже существует');
+                setProfileError(true);
+                setProfileErrText('Юзер с таким имейлом уже существует');
             }
             if (err === 500) {
-                setLogError(true);
-                setLogErrText('Ошибка сервера');
+                setProfileError(true);
+                setProfileErrText('Ошибка сервера');
             }     
         })
+        .finally(() => setSubmitButtonDisabled(false))
         }
-
+       
         function deleteMovieCard(movie) {
+            setSubmitButtonDisabled(true)
             deleteMovie(movie._id)
             .then((res) =>{
-                setSavedMovie((state) => state.filter((c) => c._id !== movie._id))
-               
+                setSavedMovie((state) => state.filter((c) => c._id !== movie._id)) 
             })
-            .catch((err) => console.log(err))
-
+            .catch((err) => setToolTip(true))
+            .finally(() => setSubmitButtonDisabled(false))
         }
-
-    // useEffect(() => {
-        // getMovies()
-    //         .then((res) => {
-    //             setIsLoading(false);
-    //                 setAllMovies(res);
-    //                 localStorage.setItem('allMovies', JSON.stringify(res));
-    //         })
-    //         .catch(() => {
-    //             setError(true);
-    //             setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
-    //         })
-    //         .finally(() => {setIsLoading(false)
-    //             })
-    // }, [localStorage.getItem('jwt')])
 
     function handleRegisterSubmit(password, email, name) {
         setSubmitButtonDisabled(true);
         register(password, email, name)
             .then((res) => {
                 if (res) {
-                    navigate('/movies');
                     setLogError(false);
+                    setCurrentUser(res)
                     handleLoginSubmit(email, password);
                 }
             })
@@ -166,7 +132,6 @@ function App() {
                     setLogErrText('Ошибка сервера');
                 }          
         })
-        .finally(() => setSubmitButtonDisabled(false))
     }
 
 
@@ -176,7 +141,7 @@ function App() {
             .then((res) => {
                 if (res) {
                     localStorage.setItem('jwt', res.token);
-                    // navigate('/movies');
+                    navigate('/movies')
                 }
             })
             .catch((err) => {
@@ -201,13 +166,17 @@ function App() {
                         console.log('success')
                     }
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => setToolTip(true))
         }
     }
 
     function handleLogout() {
         localStorage.clear();
-        navigate('/signin');
+        navigate('/');
+    }
+
+    function closeToolTip () {
+        setToolTip(false)
     }
 
     return (
@@ -221,13 +190,20 @@ function App() {
             <Route element={<ProtectedRoute
                     ></ProtectedRoute>}>
                          <Route path='/movies' element={<Movies setSavedMovie={setSavedMovie} 
-                        savedMovie={savedMovie} deleteMovieCard={deleteMovieCard}/>}/>
-                         <Route path='/saved-movies' element={<SavedMovies savedMovie={savedMovie} deleteMovieCard={deleteMovieCard}/>}/>
-                         <Route path='/profile' element={<Profile handleLogout={handleLogout} setLogError={setLogError} logError={logError} handleEditProfile={handleEditProfile}/>}/>
+                        savedMovie={savedMovie} deleteMovieCard={deleteMovieCard} setToolTip={setToolTip}
+                        setSubmitButtonDisabled={setSubmitButtonDisabled} submitButtonDisabled={submitButtonDisabled}/>}/>
+                         <Route path='/saved-movies' element={<SavedMovies savedMovie={savedMovie} 
+                         isLoading={isLoading} deleteMovieCard={deleteMovieCard}
+                         submitButtonDisabled={submitButtonDisabled}/>}/>
+                         <Route path='/profile' element={<Profile handleLogout={handleLogout} 
+                         profileErrText={profileErrText} setProfileError={setProfileError} 
+                         profileError={profileError} submitButtonDisabled={submitButtonDisabled} 
+                         handleEditProfile={handleEditProfile}/>}/>
                     </Route>
                 <Route path='*' element={<PageNotFound/>}/>
             </Routes>
             {isFooter && <Footer/>}
+            <InfoTooltip closeToolTip={closeToolTip} toolTip={toolTip}/>
         </div>
         </CurrentUserContext.Provider>
     );

@@ -6,26 +6,23 @@ import './MoviesCardList.css';
 import {CurrentUserContext} from "../../context/CurrentUserContext";
 
 
-const MoviesCardList = ({cards, isLoading, error, handleLoadMore, visibleMoviesCount, errorText, saveMovies, deleteMovieCard, savedMovie}) => {
+const MoviesCardList = ({cards, isLoading, error, handleLoadMore, visibleMoviesCount, errorText, saveMovies, deleteMovieCard, savedMovie, submitButtonDisabled}) => {
     const location = useLocation();
     const currentUser = React.useContext(CurrentUserContext)
-    // const isSaved = cards.forEach((i)=> i.id === i.movieId) || cards.some(i => i.owner._id === currentUser._id);
-    // console.log(cards)
-    // console.log(isSaved)
-    // console.log(cards.forEach((i)=> console.log(i.id)))
-    // console.log(isSaved)
-    // console.log(savedMovie)
+   
     return (
         <section className='movie-list'>
           {isLoading ? <Preloader/> : error ? 
           <p className='movie-list__error'>{errorText}</p> : <>
           <div className='movie-list__container'>
                 {location.pathname==='/movies' && cards.slice(0, visibleMoviesCount).map((card) => (
-                    <MoviesCard key={card.id} card={card} cards={cards} savedMovie={savedMovie} deleteMovieCard={deleteMovieCard} saveMovies={saveMovies}/>
+                    <MoviesCard key={card.id} card={card} cards={cards} savedMovie={savedMovie} 
+                    deleteMovieCard={deleteMovieCard} saveMovies={saveMovies}
+                    submitButtonDisabled={submitButtonDisabled}/>
                 ))}
                 {location.pathname==='/saved-movies' && cards.map((card) => (
                     <MoviesCard key={card.movieId} card={card} cards={cards} deleteMovieCard={deleteMovieCard} 
-                     saveMovies={saveMovies} />
+                     saveMovies={saveMovies} submitButtonDisabled={submitButtonDisabled} />
                 ))
                 }
             </div>

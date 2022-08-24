@@ -54,7 +54,7 @@
 }
 
 .movie-card__button:hover {
-    transition: 0.6s;
+    transition: 0.3s;
     opacity: 0.6;
 }
 

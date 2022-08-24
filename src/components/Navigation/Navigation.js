@@ -38,14 +38,14 @@ const Navigation = () => {
 
     return (<>
             <Routes>
-                <Route exact path='/' element={<>
+               {!localStorage.getItem('jwt') && <Route exact path='/' element={<>
                     <div className='navigation'>
                         <Link className='navigation__link' to='/signup'>Регистрация</Link>
                         <Link className='navigation__link navigation__link_box' to='/signin'>Войти</Link>
                     </div>
                 </>}>
-                </Route>
-                {['/movies', '/saved-movies', '/profile'].map((path, index) => {
+                </Route>}
+                {localStorage.getItem('jwt') && ['/movies', '/saved-movies', '/profile', '/'].map((path, index) => {
                     return (
                         <Route path={path} element={<>
                             <div className='navigation navigation_margin navigation_none'>
