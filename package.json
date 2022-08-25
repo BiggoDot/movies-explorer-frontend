@@ -13,6 +13,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "dep": "npm run build && scp -r ./build/* biggodot@130.193.52.42:/home/biggodot/movies-frontend",
+    "predeploy": "npm run build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
