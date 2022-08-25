@@ -1,19 +1,16 @@
 import React, { useCallback } from "react";
-// import {CurrentUserContext} from "../context/CurrentUserContext";
 
-//хук управления формой и валидации формы
 export function useFormWithValidation() {
   const [values, setValues] = React.useState({});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
-//   const currentUser = React.useContext(CurrentUserContext);
 
   const handleChange = (event) => {
     const target = event.target;
     const name = target.name;
     const value = target.value;
-    setValues({...values, [name]: value});
-    setErrors({...errors, [name]: target.validationMessage });
+    setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: target.validationMessage });
     setIsValid(target.closest("form").checkValidity());
   };
 
@@ -26,5 +23,5 @@ export function useFormWithValidation() {
     [setValues, setErrors, setIsValid]
   );
 
-  return { values, handleChange, errors, isValid, resetForm, setValues};
+  return { values, handleChange, errors, isValid, resetForm, setValues };
 }

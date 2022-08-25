@@ -24,7 +24,7 @@ const AboutMe = () => {
                 </div>
                 <img
                     src='https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cGhvdG98ZW58MHx8MHx8&w=1000&q=80'
-                    alt='photo of a person' className='about-me__photo'/>
+                    alt='photo of a person' className='about-me__photo' />
             </div>
         </section>
     );

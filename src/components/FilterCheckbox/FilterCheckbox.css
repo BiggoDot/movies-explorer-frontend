@@ -48,11 +48,11 @@
     border-radius: 50%;
 }
 
-.filter__checkbox:checked + .filter__slider {
+.filter__checkbox:checked+.filter__slider {
     background-color: #3DDC84;
 }
 
-.filter__checkbox:checked + .filter__slider:before {
+.filter__checkbox:checked+.filter__slider:before {
     transform: translateX(20px);
 }
 
@@ -80,4 +80,3 @@
         font-size: 11px;
     }
 }
-

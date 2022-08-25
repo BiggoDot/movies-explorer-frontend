@@ -13,7 +13,6 @@ const Footer = () => {
                     <a href='https://www.facebook.com/' className='footer__link' target='_blank'>Facebook</a>
                 </div>
             </div>
-
         </footer>
     );
 };

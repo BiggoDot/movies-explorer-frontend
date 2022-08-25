@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import './Movies.css';
-import { saveMovie } from '../../utils/MainApi'; 
+import { saveMovie } from '../../utils/MainApi';
 import { getMovies } from '../../utils/MoviesApi';
 import { movieFilter } from '../../utils/filterMovies';
 
-const Movies = ({setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitButtonDisabled, setSubmitButtonDisabled}) => {
+const Movies = ({ setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitButtonDisabled, setSubmitButtonDisabled }) => {
     const [movie, setMovie] = React.useState([]);
     const [film, setFilm] = React.useState(getSearchStoreValue());
     const [width, setWidth] = React.useState(window.innerWidth);
@@ -15,12 +15,8 @@ const Movies = ({setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitB
     const [checkShorts, setCheckShorts] = React.useState(JSON.parse(localStorage.getItem('checkBox')) || false);
     const [allMovies, setAllMovies] = React.useState(JSON.parse(localStorage.getItem('allMovies')) || []);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [error, setError] =React.useState(false);
+    const [error, setError] = React.useState(false);
     const [errorText, setErrorText] = React.useState('');
-
-    function showShortMovies() {
-        setCheckShorts(!checkShorts)
-    }
 
     function saveMovies(movie) {
         setSubmitButtonDisabled(true)
@@ -35,27 +31,26 @@ const Movies = ({setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitB
             movie.nameEN,
             movie.thumbnail,
             movie.movieId)
-        .then((res) => {
-            setSavedMovie([res, ...savedMovie])
-        })
-        .catch((err) => setToolTip(true))
-        .finally(() => setSubmitButtonDisabled(false))
+            .then((res) => {
+                setSavedMovie([res, ...savedMovie])
+            })
+            .catch((err) => setToolTip(true))
+            .finally(() => setSubmitButtonDisabled(false))
     }
-
 
     useEffect(() => {
         function handleWindowSize() {
             setWidth(window.innerWidth);
         }
-        window.addEventListener('resize', handleWindowSize) 
+        window.addEventListener('resize', handleWindowSize)
         return () => window.removeEventListener('resize', handleWindowSize)
     }, [width])
 
-    function getFirstRows (width) {
+    function getFirstRows(width) {
         if (width >= 1280) {
-           return 12;
+            return 12;
         }
-        if(width >= 768) {
+        if (width >= 768) {
             return 8;
         }
         else {
@@ -65,9 +60,13 @@ const Movies = ({setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitB
 
     const getLoad = (width) => {
         if (width >= 1280) {
-           return 3;
+            return 3;
         }
         return 2;
+    }
+
+    function handleLoadMore() {
+        return setVisibleMoviesCount((prevCount) => prevCount + getLoad(width))
     }
 
     useEffect(() => {
@@ -76,73 +75,72 @@ const Movies = ({setSavedMovie, savedMovie, deleteMovieCard, setToolTip, submitB
         localStorage.setItem('filteredMovies', JSON.stringify(moviesToDisplay))
         localStorage.setItem('checkBox', checkShorts);
         const filteredMoviesInLocal = JSON.parse(localStorage.getItem('filteredMovies')) || [];
-           
-        setMovie(filteredMoviesInLocal); 
-        if(filteredMoviesInLocal.length === 0 && film.length > 0) {
+
+        setMovie(filteredMoviesInLocal);
+        if (filteredMoviesInLocal.length === 0 && film.length > 0) {
             setIsLoading(false);
             setErrorText('Ничего не найдено');
             return setError(true);
-        }    
-       
+        }
     }, [allMovies, checkShorts])
 
-    function getSearchStoreValue () {
+    function showShortMovies() {
+        setCheckShorts(!checkShorts)
+    }
+
+    function getSearchStoreValue() {
         const searchStoreValue = localStorage.getItem('filmSearch');
-        if(!searchStoreValue) {
+        if (!searchStoreValue) {
             return '';
         }
         return searchStoreValue;
     }
 
-    function handleFilmChange (e) {
+    function handleFilmChange(e) {
         setFilm(e.target.value)
     }
-    
-    function handleFilmSearch (e) {
+
+    function handleFilmSearch(e) {
         e.preventDefault();
         setError(false);
         setIsLoading(true);
-          
+
         if (film === '') {
             setIsLoading(false);
             setErrorText('Нужно ввести ключевое слово');
             return setError(true);
         }
-        if(!moviesInLocal){
-        getMovies()
-            .then((res) => {
-                setIsLoading(false);
+        if (!moviesInLocal) {
+            getMovies()
+                .then((res) => {
+                    setIsLoading(false);
                     localStorage.setItem('allMovies', JSON.stringify(res));
                     setAllMovies(res);
                     localStorage.setItem('filmSearch', film);
-            })
-            .catch(() => {
-                setError(true);
-                setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
-            })
-            .finally(() => {setIsLoading(false)
                 })
-            }
-        else{
+                .catch(() => {
+                    setError(true);
+                    setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        }
+        else {
             setAllMovies(moviesInLocal);
             setIsLoading(false);
             localStorage.setItem('filmSearch', film);
         }
-    
-    }
-
-    function handleLoadMore () {
-        return setVisibleMoviesCount((prevCount) => prevCount + getLoad(width))
     }
 
     return (
         <main className='movies'>
-            <SearchForm handleFilmSearch={handleFilmSearch} handleFilmChange={handleFilmChange} 
-            film={film} showShortMovies={showShortMovies} checkShorts={checkShorts}/>
-            <MoviesCardList cards={movie} isLoading={isLoading} error={error} 
-            visibleMoviesCount={visibleMoviesCount} deleteMovieCard={deleteMovieCard} handleLoadMore={handleLoadMore}
-            errorText={errorText} saveMovies={saveMovies} savedMovie={savedMovie}
-            submitButtonDisabled={submitButtonDisabled}/>
+            <SearchForm handleFilmSearch={handleFilmSearch} handleFilmChange={handleFilmChange}
+                film={film} showShortMovies={showShortMovies} checkShorts={checkShorts} />
+            <MoviesCardList cards={movie} isLoading={isLoading} error={error}
+                visibleMoviesCount={visibleMoviesCount} deleteMovieCard={deleteMovieCard} handleLoadMore={handleLoadMore}
+                errorText={errorText} saveMovies={saveMovies} savedMovie={savedMovie}
+                submitButtonDisabled={submitButtonDisabled} />
         </main>
     );
 };

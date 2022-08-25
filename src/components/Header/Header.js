@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import Navigation from "../Navigation/Navigation";
 import './Header.css';
@@ -14,12 +14,12 @@ const Header = () => {
                     : 'header__container'}>
                 <Link className={location.pathname === '/signin' ? 'header__link header__link_margin_remove'
                     : location.pathname === '/signup' ? 'header__link header__link_margin_remove' : 'header__link'}
-                      to='/'>
+                    to='/'>
                     <img src={logo}
-                         className='header__logo'
-                         alt='logo'/>
+                        className='header__logo'
+                        alt='logo' />
                 </Link>
-                <Navigation/>
+                <Navigation />
             </div>
         </header>
     );
