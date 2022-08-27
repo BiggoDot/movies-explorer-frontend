@@ -4,6 +4,10 @@
     margin: 0 auto;
 }
 
+.greeting__from {
+    position: relative;
+}
+
 .greeting__title {
     font-weight: 500;
     font-size: 24px;
@@ -43,6 +47,11 @@
 
 .greeting__input_show_error {
     color: #EE3465;
+    border-bottom-color: #EE3465;
+}
+
+.greeting__input_show_error:focus {
+    border-bottom-color: #EE3465;
 }
 
 .greeting__container {
@@ -70,9 +79,18 @@
     cursor: pointer;
 }
 
+.greeting__button_disabled {
+    background-color: #8B8B8B;
+    cursor: default;
+}
+
 .greeting__button:hover {
     opacity: .6;
     transition: .5s;
+}
+
+.greeting__button_disabled:hover {
+    opacity: 1;
 }
 
 .greeting__text {
@@ -96,6 +114,18 @@
     transition: .5s;
 }
 
+.greeting__error {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 400;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 0;
+    position: absolute;
+    top: 70%;
+    width: 100%;
+}
+
 @media screen and (max-width: 500px) {
     .greeting {
         max-width: 260px;
@@ -115,6 +145,11 @@
     .greeting__text {
         font-size: 12px;
         line-height: 15px;
+    }
+
+    .greeting__error {
+        font-size: 12px;
+        line-height: 14px;
     }
 
 }
